@@ -1,10 +1,11 @@
 import axios from "axios";
 import * as yup from "yup";
+import { isValidPhoneNumber } from "react-phone-number-input";
 
-const config = require('../package.json').projectConfig;
+const config = require("../package.json").projectConfig;
 const BACKEND_BASE_URL = config.backendApiBaseUrl;
 
-export const axiosRes = axios.create({
+const axiosRes = axios.create({
   baseURL: BACKEND_BASE_URL,
   headers: {
     "X-Requested-With": "XMLHttpRequest",
@@ -15,7 +16,7 @@ export const axiosRes = axios.create({
   withCredentials: true,
 });
 
-export const contactValidationSchema = yup.object().shape({
+const contactValidationSchema = yup.object().shape({
   fullName: yup.string().trim().required("Kindly provide your full name!"),
   emailAddress: yup
     .string()
@@ -23,25 +24,33 @@ export const contactValidationSchema = yup.object().shape({
     .required("Kindly provide a valid email address!"),
   mobileNumber: yup
     .string()
-    .trim()
-    .required("Kindly provide a valid mobile number!"),
+    .test("name", "Kindly provide a valid mobile number!", (value) =>
+      isValidPhoneNumber(value || "")
+    )
+    .required("Field required")
+    .nullable(),
   enquiry: yup
     .string()
     .trim()
     .required("Kindly explain more about your enquiries!"),
 });
 
-export const SubscribeValidationSchema = yup.object().shape({
+const SubscribeValidationSchema = yup.object().shape({
   mailingAddress: yup
     .string()
     .trim()
-    .required("Kindly provide a valid email address!")
+    .required("Kindly provide a valid email address!"),
 });
 
-export function removeTags(str) {
+function removeTags(str) {
   if (str === null || str === "") return false;
   else str = str.toString();
   return str.replace(/(<([^>]+)>)/gi, "");
 }
 
-
+export {
+  axiosRes,
+  contactValidationSchema,
+  SubscribeValidationSchema,
+  removeTags,
+};

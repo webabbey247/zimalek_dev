@@ -1,6 +1,6 @@
-import React from "react";
+import React, {useState} from "react";
 import { axiosRes } from "../../utils/helper";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { contactValidationSchema } from "../../utils/helper";
 import { toast } from "react-toastify";
@@ -18,9 +18,13 @@ import {
   CustomDiv,
   GeneralSmText,
 } from "../../styles/GlobalCss";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
 const ContactUsForm = () => {
+  const [mobile, setMobile] = useState("");
   const {
+    control,
     register,
     handleSubmit,
     reset,
@@ -33,7 +37,7 @@ const ContactUsForm = () => {
     const payload = {
       customer_full_name: data.fullName,
       customer_email_address: data.emailAddress,
-      customer_mobile_number: data.mobileNumber,
+      customer_mobile_number:  mobile ? mobile : data.mobileNumber,
       customer_company_name: data.companyName,
       customer_company_web_url: data.companyWebUrl,
       customer_enquiries: data.enquiry,
@@ -87,6 +91,30 @@ const ContactUsForm = () => {
           </Content2Column2>
 
           <Content2Column2>
+          <Controller
+            name="mobileNumber"
+            {...register("mobileNumber", {
+              onChange: (e) => {
+                setMobile(e.target.value);
+              },
+            })}
+            control={control}
+            render={({ field }) => (
+              <PhoneInput
+                {...field}
+                international
+                countryCallingCodeEditable={false}
+                defaultCountry="NG"
+                placeholder="Enter phone number"
+              />
+            )}
+          />
+          {errors.mobileNumber && (
+            <InputErrors>{errors.mobileNumber.message}</InputErrors>
+          )}
+        </Content2Column2>
+
+          {/* <Content2Column2>
             <TextInput
               className={`${errors.mobileNumber ? "invalid" : ""}`}
               name="mobileNumber"
@@ -97,7 +125,7 @@ const ContactUsForm = () => {
               {errors.mobileNumber && (
             <InputErrors>{errors.mobileNumber.message}</InputErrors>
           )}
-          </Content2Column2>
+          </Content2Column2> */}
 
           <Content2Column2>
             <TextInput

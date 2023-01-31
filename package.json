@@ -19,6 +19,7 @@
     "react-dom": "^18.0.0",
     "react-hook-form": "^7.33.1",
     "react-icons": "^4.3.1",
+    "react-phone-number-input": "^3.2.16",
     "react-toastify": "^9.1.1",
     "styled-components": "^5.3.5",
     "swiper": "^8.1.4",
